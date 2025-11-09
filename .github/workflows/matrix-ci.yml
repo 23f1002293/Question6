@@ -7,37 +7,33 @@ on:
 
 jobs:
   build:
-    # run each matrix job on ubuntu for simplicity; you can vary os or versions
+    name: Build for Node ${{ matrix.node-version }}
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
-        node-version: [14, 16, 18]    # >= 3 variants
-        # you may add other axes (os: [ubuntu-latest, windows-latest]) if desired
+        node-version: [14, 16, 18]   # ✅ Three variants (runs in parallel)
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: matrix-606da05
-        # This step must include the identifier matrix-606da05
-        run: echo "Running matrix job for node ${{ matrix.node-version }}"
-
-      - name: Setup Node (optional)
+      - name: Set up Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Generate unique build artifact
+      - name: matrix-606da05
+        run: echo "Running matrix job for Node.js version ${{ matrix.node-version }}"
+
+      - name: Generate build artifact
         run: |
-          # create a file including the variant info and timestamp
-          mkdir -p artifacts
-          echo "Build artifact for node-${{ matrix.node-version }}" > artifacts/output-${{ matrix.node-version }}.txt
-          echo "Build time: $(date --utc +%Y-%m-%dT%H:%M:%SZ)" >> artifacts/output-${{ matrix.node-version }}.txt
-          # include some other info so file is non-empty
-          echo "Matrix id: ${{ github.run_id }} - job: ${{ github.job }} - matrix: ${ { matrix.node-version } }" >> artifacts/output-${{ matrix.node-version }}.txt
+          echo "Build artifact for Node.js version ${{ matrix.node-version }}" > output.txt
+          echo "Matrix job completed successfully on $(date)" >> output.txt
+          echo "Identifier: matrix-606da05" >> output.txt
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          # name must start with build-606da05-<variant>
           name: build-606da05-node-${{ matrix.node-version }}
-          path: artifacts/output-${{ matrix.node-version }}.txt
+          path: output.txt
