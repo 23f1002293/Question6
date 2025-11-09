@@ -19,7 +19,7 @@ jobs:
 
       - name: matrix-606da05
         # This step must include the identifier matrix-606da05
-        run: echo "Running matrix job for node ${ { matrix.node-version } }"
+        run: echo "Running matrix job for node ${{ matrix.node-version }}"
 
       - name: Setup Node (optional)
         uses: actions/setup-node@v4
